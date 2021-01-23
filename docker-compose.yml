@@ -1,12 +1,17 @@
 version: '3'
 
 services:
-  nodejs:
-    #fill out the configuration here
+  website:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: node-10:alpine
+    container_name: nodejs
+    restart: unless-stopped
     networks:
       - app-network
   
-  #the nginx configuration is given below
+ #the nginx configuration is given below
   #the website will run on localhost:80 
   webserver:
     image: nginx:mainline-alpine
@@ -18,7 +23,7 @@ services:
       - web-root:/var/www/html
       - ./nginx-conf:/etc/nginx/conf.d
     depends_on:
-      - nodejs
+      - website
     networks:
       - app-network
 
@@ -28,9 +33,9 @@ volumes:
     driver_opts:
       type: none
       #fill out your absolute path to your folder here
-      device: /absolute/path/to/web/template/folder
+      device: /home/zeeshan/School/cmsc388T-web-template/
       o: bind
 
 networks:
   app-network:
-    driver: bridge 
+    driver: bridge  
